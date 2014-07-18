@@ -22,9 +22,13 @@ SECRET_KEY = '#hcqo3r!85ecbzls$=rsx7x3ojs9!oemu-+*-y$ej@@=e515h!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = DEBUG
 
-ALLOWED_HOSTS = []
+TEMPLATE_DIRS = (
+    'templates',
+)
+
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -36,6 +40,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'auth',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -82,6 +88,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "static"),
     os.path.join(BASE_DIR, "static_media"),
 )
