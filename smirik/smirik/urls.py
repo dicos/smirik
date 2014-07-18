@@ -9,8 +9,14 @@ admin.autodiscover()
 urlpatterns = patterns('',
     url(r'^$', 'plot.views.main', name='main'),
     
-    url(r'^login/$', 'django.contrib.auth.views.login', name='login', kwargs={'template_name': 'registration/login.html'}),
-    url(r'^logout/$', 'django.contrib.auth.views.logout', name='logout', kwargs={'template_name': 'registration/logout.html'}),
+    url(r'^login/$',
+        'django.contrib.auth.views.login',
+        name='login',
+        kwargs={'template_name': 'registration/login.html'}),
+    url(r'^logout/$',
+        'django.contrib.auth.views.logout',
+        name='logout',
+        kwargs={'template_name': 'registration/logout.html'}),
     url(r'^admin/', include(admin.site.urls)),
 )
 
