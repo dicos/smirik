@@ -30,6 +30,7 @@ TEMPLATE_DIRS = (
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
+AUTH_USER_MODEL = 'auth.Client'
 
 # Application definition
 
@@ -42,6 +43,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 
     'auth',
+    'plot'
 )
 
 MIDDLEWARE_CLASSES = (
