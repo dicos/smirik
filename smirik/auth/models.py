@@ -12,6 +12,9 @@ class NegotiablePaper(models.Model):
     def __unicode__(self):
         return self.name
 
+    def __str__(self):
+        return self.__unicode__()
+
     class Meta:
         verbose_name = u'negotiable paper'
         verbose_name_plural = u'negotiables papers'
