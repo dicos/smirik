@@ -16,11 +16,13 @@ class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
         make_option('-c',
                     '--clear',
-                    action="store_true",
+                    action="store_false",
                     default=False,
-                    dest="clear"),
+                    dest="clear",
+                    help='clear database and load new data'),
     )
     quantize = Decimal('0.01')  # round quantize of price
+    start_time = date(2014, 1, 1)
 
     def clear(self):
         DataCache.objects.all().delete()
@@ -31,8 +33,9 @@ class Command(BaseCommand):
 
     @nested_commit_on_success
     def handle(self, *args, **options):
-        if options['clear']:
+        if '-c' in args or '--clear' in args:
             self.clear()
+            return
 
         months = []
         if len(args) == 2:
@@ -45,7 +48,7 @@ class Command(BaseCommand):
                 else:
                     months.append(dt)
         else:
-            months = [date(2014, 1, 1), (date.today() - timedelta(days=1))]
+            months = [self.start_time, (date.today() - timedelta(days=1))]
 
         all_data = {}
         quantize = Decimal('0.01')
