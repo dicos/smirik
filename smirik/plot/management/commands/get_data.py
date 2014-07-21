@@ -6,13 +6,9 @@ from optparse import make_option
 from django.core.management.base import BaseCommand, CommandError
 import pandas.io.data as web
 
-#from common_helpers import nested_commit_on_success
+from common_helpers import nested_commit_on_success
 from auth.models import NegotiablePaper
 from plot.models import DataCache
-
-
-def clear(*args, **kwargs):
-    pass
 
 
 class Command(BaseCommand):
@@ -33,7 +29,7 @@ class Command(BaseCommand):
         """ get rounding price (convert float64 to Decimal) """
         return Decimal(value).quantize(self.quantize, rounding=ROUND_FLOOR)
 
-    #@nested_commit_on_success
+    @nested_commit_on_success
     def handle(self, *args, **options):
         if options['clear']:
             self.clear()
