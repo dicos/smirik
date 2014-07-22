@@ -12,6 +12,7 @@ run this commands:
 + `git clone git@github.com:dicos/smirik.git`
 + cd smirik
 + pip install -r requirements.pip
++ cd smirik
 + python manage.py syncdb
 + python manage.py get\_data
 + python manage.py runserver
