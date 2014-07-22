@@ -12,12 +12,16 @@ from pandas import Series, DataFrame
 from plot.models import DataCache
 
 
+def plot_paper(prices, dates, paper_name):
+    """ plot current negotiable paper """
+    Series(prices, index=dates, name=paper_name, dtype='float32').plot()
+
+
 def main(request):
     all_dates = set()
     data = DataCache.objects.values('paper__name', 'date', 'price') \
                             .order_by('paper' ,'date')
     ticks = {}
-# TODO: need work it!
     obj_time = time()
     first_price = 0
     prices = []
@@ -34,8 +38,7 @@ def main(request):
             first_price = item['price']
             portfolio_by_month[item['paper__name']] = []
             if len(prices) > 0:
-                s = Series(prices, index=dates, name=curr_paper, dtype='float32')
-                s.plot(label=curr_paper)
+                plot_paper(prices, dates, curr_paper)
             prices = []
             dates = []
             if is_init:
@@ -55,14 +58,13 @@ def main(request):
             portfolio_by_month_dates.add(datetime(prev_month[0], prev_month[1], last_day))
             prev_month = curr_month
         last_price = item['price']
-    s = Series(prices, index=dates, name=curr_paper, dtype='float32')
-    s.plot(label=curr_paper)
+    plot_paper(prices, dates, curr_paper)
 
-    last_day = calendar.monthrange(*prev_month)[1]
     portfolio_by_month[curr_paper].append(last_price)
     portfolio_by_month_dates.add(curr_date)
-    del prices, dates, curr_paper, s
+    del prices, dates, curr_paper
 
+    # polotting report "portfolio vs time"
     img_file = BytesIO()
     figure = plt.gcf()
     figure.set_size_inches(15, 8)
@@ -73,6 +75,7 @@ def main(request):
     plt.savefig(img_file, format='svg', dpi=100)
     plt.close()
     
+    # generate table "portfolio by month"
     frame = DataFrame(portfolio_by_month, index=portfolio_by_month_dates)
     frame['total'] = sum((frame[col] for col in frame.columns))
     frame = frame.sort_index()
