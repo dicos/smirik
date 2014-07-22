@@ -5,7 +5,6 @@
     <title>Print portfolio information {% block title %}{% endblock %}</title>
     <!-- Bootstrap -->
     <link href="{{ STATIC_URL }}bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="{{ STATIC_URL }}other/css.css" rel="stylesheet">
     <script src="http://code.jquery.com/jquery-latest.js"></script>
     <style>
      .nav-tabs .disabled a, .nav-tabs .disabled a:hover, .nav-tabs .disabled a:focus {border: none;}
@@ -39,24 +38,27 @@
     </div>
     {% endif %}
     {{img|safe}}
-    <h3>Report portfolio by month</h3>
-    <table class="table table-bordered">
-        <tr>
-            <th>date</th>
-            {% for col in table.columns %}
-            <th>{{ col }}</th>
+    {% if table %}
+        <h3>Report portfolio by month</h3>
+        <table class="table table-bordered">
+            <tr>
+                <th>date</th>
+                {% for col in table.columns %}
+                <th>{{ col }}</th>
+                {% endfor %}
+            </tr>
+            {% for index, row in table.iterrows %}
+            <tr>
+                <td>{{ index|date:"Y-m-d" }}</td>
+                {% for col in row %}
+                <td>{{ col }} $</td>
+                {% endfor %}
+            </tr>
             {% endfor %}
-        </tr>
-        {% for index, row in table.iterrows %}
-        <tr>
-            <td>{{ index|date:"Y-m-d" }}</td>
-            {% for col in row %}
-            <td>{{ col }} $</td>
-            {% endfor %}
-        </tr>
-        {% endfor %}
-    </table>
-    {% block content %}{% endblock %}    
+        </table>
+    {% else %}
+        <h1 style="color:red">Need load data, please, run ./manage.py get_data</h1>
+    {% endif %}
     </div>
   </body>
 </html>

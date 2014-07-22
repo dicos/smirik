@@ -79,22 +79,24 @@ def main(request):
     data = DataCache.objects.values('paper__name', 'date', 'price') \
                             .order_by('paper' ,'date')
 
-    portfolio_by_month, index = call_main(data)
-    # polotting report "portfolio vs time"
-    img_file = BytesIO()
-    figure = plt.gcf()
-    figure.set_size_inches(15, 8)
-    plt.legend(loc=2)
-    plt.ylabel('Change of price, $')
-    plt.xlabel('Date')
-    plt.title("Report portfolio vs time")
-    plt.savefig(img_file, format='svg', dpi=100)
-    plt.close()
-    
-    # generate table "portfolio by month"
-    frame = DataFrame(portfolio_by_month, index=index)
-    frame['total'] = sum((frame[col] for col in frame.columns))
+    t_data = {}
+    if data.exists():
+        portfolio_by_month, index = call_main(data)
+        # polotting report "portfolio vs time"
+        img_file = BytesIO()
+        figure = plt.gcf()
+        figure.set_size_inches(15, 8)
+        plt.legend(loc=2)
+        plt.ylabel('Change of price, $')
+        plt.xlabel('Date')
+        plt.title("Report portfolio vs time")
+        plt.savefig(img_file, format='svg', dpi=100)
+        plt.close()
+        
+        # generate table "portfolio by month"
+        frame = DataFrame(portfolio_by_month, index=index)
+        frame['total'] = sum((frame[col] for col in frame.columns))
 
-    t_data = {'img': img_file.getvalue(),
-              'table': frame}
+        t_data.update({'img': img_file.getvalue(),
+                       'table': frame})
     return render(request, 'main.html', t_data)
