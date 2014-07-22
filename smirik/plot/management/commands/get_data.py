@@ -16,7 +16,7 @@ class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
         make_option('-c',
                     '--clear',
-                    action="store_false",
+                    action="store_true",
                     default=False,
                     dest="clear",
                     help='clear database and load new data'),
@@ -33,7 +33,7 @@ class Command(BaseCommand):
 
     @nested_commit_on_success
     def handle(self, *args, **options):
-        if '-c' in args or '--clear' in args:
+        if '-c' in args or '--clear' in args or options.get('clear'):
             self.clear()
             return
 
@@ -53,9 +53,7 @@ class Command(BaseCommand):
         all_data = {}
         quantize = Decimal('0.01')
         for ticker in NegotiablePaper.objects.all():
-            data_series = web.get_data_yahoo(ticker.name,
-                                             months[0],
-                                             months[1])
+            data_series = web.get_data_google(ticker.name, *months)
             cache_gen = [DataCache(paper=ticker,
                                    date=ind,
                                    price=self.get_price(data_series.Close[ind])) \

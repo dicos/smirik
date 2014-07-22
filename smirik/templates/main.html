@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
-{% load static from staticfiles %} {% load in_group %}
+{% load static from staticfiles %} 
   <head>
-    <title>Генетический реестр пациентов НСО - {% block title %}{% endblock %}</title>
+    <title>Print portfolio information {% block title %}{% endblock %}</title>
     <!-- Bootstrap -->
     <link href="{{ STATIC_URL }}bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="{{ STATIC_URL }}other/css.css" rel="stylesheet">
@@ -38,6 +38,7 @@
       {% endfor %}
     </div>
     {% endif %}
+    {{img|safe}}
     {% block content %}{% endblock %}    
     </div>
   </body>
