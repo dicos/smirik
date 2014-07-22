@@ -17,10 +17,10 @@ def plot_paper(prices, dates, paper_name):
     Series(prices, index=dates, name=paper_name, dtype='float32').plot()
 
 
-def main(request):
-    all_dates = set()
-    data = DataCache.objects.values('paper__name', 'date', 'price') \
-                            .order_by('paper' ,'date')
+def call_main(qs):
+    """ prepare adata for report "portfolio by months" and 
+        plotting report "portfolio vs time" """
+    #  initialize data
     ticks = {}
     obj_time = time()
     first_price = 0
@@ -33,7 +33,13 @@ def main(request):
     last_price = .0
     curr_date = datetime.now()
     is_init = False
-    for item in data:
+
+    def update_portfolio_data(paper_name, price, tick_date):
+        """ update data portfolio_by_month and portfolio_by_month_dates """
+        portfolio_by_month[paper_name].append(price)
+        portfolio_by_month_dates.add(tick_date)
+
+    for item in qs:
         if curr_paper != item['paper__name']:
             first_price = item['price']
             portfolio_by_month[item['paper__name']] = []
@@ -42,8 +48,7 @@ def main(request):
             prices = []
             dates = []
             if is_init:
-                portfolio_by_month[curr_paper].append(last_price)
-                portfolio_by_month_dates.add(curr_date)
+                update_portfolio_data(curr_paper, last_price, curr_date)
             curr_paper = item['paper__name']
             prev_month = (item['date'].year, item['date'].month)  # year, month
             last_price = item['price']
@@ -54,16 +59,27 @@ def main(request):
         curr_month = (item['date'].year, item['date'].month)
         if curr_month > prev_month:
             last_day = calendar.monthrange(*prev_month)[1]
-            portfolio_by_month[curr_paper].append(last_price)
-            portfolio_by_month_dates.add(datetime(prev_month[0], prev_month[1], last_day))
+            last_month = datetime(prev_month[0], prev_month[1], last_day)
+            update_portfolio_data(curr_paper, last_price, last_month)
             prev_month = curr_month
         last_price = item['price']
     plot_paper(prices, dates, curr_paper)
 
     portfolio_by_month[curr_paper].append(last_price)
     portfolio_by_month_dates.add(curr_date)
-    del prices, dates, curr_paper
 
+    portfolio_by_month_dates = list(portfolio_by_month_dates)
+    portfolio_by_month_dates.sort()
+    return portfolio_by_month, portfolio_by_month_dates
+
+
+def main(request):
+    """ plotting reports "portfolio vs time" and "portfolio by months" """
+
+    data = DataCache.objects.values('paper__name', 'date', 'price') \
+                            .order_by('paper' ,'date')
+
+    portfolio_by_month, index = call_main(data)
     # polotting report "portfolio vs time"
     img_file = BytesIO()
     figure = plt.gcf()
@@ -76,9 +92,8 @@ def main(request):
     plt.close()
     
     # generate table "portfolio by month"
-    frame = DataFrame(portfolio_by_month, index=portfolio_by_month_dates)
+    frame = DataFrame(portfolio_by_month, index=index)
     frame['total'] = sum((frame[col] for col in frame.columns))
-    frame = frame.sort_index()
 
     t_data = {'img': img_file.getvalue(),
               'table': frame}
