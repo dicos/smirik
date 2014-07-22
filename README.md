@@ -19,7 +19,7 @@ run this commands:
 
 
 ##How to create new user
-+ go to http://localhost:8000/admin/auth/negotiablepaper/ and add some tickers from https://www.google.com/finance#stockscreener
++ go to http://localhost:8000/admin/auth/negotiablepaper/ and add some tickers from https://www.google.com/finance#stockscreener (for example 'IBM', 'MSF')
 + go to http://localhost:8000/admin/auth/client/ and click to your user
 + in profile page select "negotiable papers" and write first\_name and last\_name
 + go to http://localhost:8000/ where you can see plot "portfolio vs time" and table "portfolio by month"
