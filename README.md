@@ -15,7 +15,7 @@ run this commands:
 + cd smirik
 + python manage.py syncdb
 + python manage.py runserver
-+ go to http://localhost:8000/admin/auth/negotiablepaper/ and add some tickers from https://www.google.com/finance#stockscreener (for example 'IBM', 'MSF')
++ go to http://localhost:8000/admin/auth/negotiablepaper/ and add 'IBM', 'MSF'
 + press Ctrl+C
 + python manage.py get\_data
 + python manage.py runserver
