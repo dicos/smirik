@@ -75,6 +75,7 @@ def main(request):
     
     frame = DataFrame(portfolio_by_month, index=portfolio_by_month_dates)
     frame['total'] = sum((frame[col] for col in frame.columns))
+    frame = frame.sort_index()
 
     t_data = {'img': img_file.getvalue(),
               'table': frame}

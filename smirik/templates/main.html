@@ -39,6 +39,23 @@
     </div>
     {% endif %}
     {{img|safe}}
+    <h3>Report portfolio by month</h3>
+    <table class="table table-bordered">
+        <tr>
+            <th>date</th>
+            {% for col in table.columns %}
+            <th>{{ col }}</th>
+            {% endfor %}
+        </tr>
+        {% for index, row in table.iterrows %}
+        <tr>
+            <td>{{ index|date:"Y-m-d" }}</td>
+            {% for col in row %}
+            <td>{{ col }} $</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
     {% block content %}{% endblock %}    
     </div>
   </body>
