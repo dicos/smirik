@@ -6,6 +6,7 @@ from django.test import TestCase
 
 from auth.models import NegotiablePaper, Client
 from plot.models import DataCache
+from plot.views import call_main
 
 
 class Cases(TestCase):
@@ -42,3 +43,34 @@ class Cases(TestCase):
         filtering_count = DataCache.objects.filter(date__range=date_range) \
                                            .count()
         self.assertEqual(filtering_count, new_full_count)
+
+    def test_call_main(self):
+        """ testing  prepare data for generate reports """
+        paper_ibm = NegotiablePaper.objects.create(name='IBM')
+        paper_aapl = NegotiablePaper.objects.create(name='AAPL')
+
+        self.assertEqual(DataCache.objects.count(), 0)
+        portfolio_by_month, index = call_main(DataCache.objects.all())
+        self.assertEqual(len(portfolio_by_month), 0)
+        self.assertEqual(len(index), 0)
+        #  with one day
+        call_command('get_data', '2013-03-01', '2013-03-02')
+        count_papers = NegotiablePaper.objects.count()
+        self.assertEqual(DataCache.objects.count(), count_papers)
+        portfolio_by_month, index = call_main(DataCache.objects.all())
+        self.assertEqual(len(portfolio_by_month), count_papers)
+        self.assertEqual(len(index), 1)
+        #  with one last day
+        call_command('get_data', '2013-03-27', '2013-03-27')
+        self.assertEqual(DataCache.objects.count(), count_papers * 2)
+        portfolio_by_month, index = call_main(DataCache.objects.all())
+        self.assertEqual(len(portfolio_by_month), count_papers)
+        self.assertEqual(len(index), 1)
+        #  with two monsh
+        call_command('get_data', '2013-04-08', '2013-04-08')
+        self.assertEqual(DataCache.objects.count(), count_papers * 3)
+        portfolio_by_month, index = call_main(DataCache.objects.all())
+        self.assertEqual(len(portfolio_by_month), count_papers)
+        for val in portfolio_by_month.values():
+            self.assertEqual(len(val), 2)
+        self.assertEqual(len(index), 2)

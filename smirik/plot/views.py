@@ -20,6 +20,8 @@ def plot_paper(prices, dates, paper_name):
 def call_main(qs):
     """ prepare adata for report "portfolio by months" and 
         plotting report "portfolio vs time" """
+    qs = qs.values('paper__name', 'date', 'price') \
+           .order_by('paper' ,'date')
     #  initialize data
     ticks = {}
     obj_time = time()
@@ -63,23 +65,23 @@ def call_main(qs):
             update_portfolio_data(curr_paper, last_price, last_month)
             prev_month = curr_month
         last_price = item['price']
-    plot_paper(prices, dates, curr_paper)
+    
+    index = []
+    if prices:
+        plot_paper(prices, dates, curr_paper)
 
-    portfolio_by_month[curr_paper].append(last_price)
-    portfolio_by_month_dates.add(curr_date)
-
-    portfolio_by_month_dates = list(portfolio_by_month_dates)
-    portfolio_by_month_dates.sort()
-    return portfolio_by_month, portfolio_by_month_dates
+        portfolio_by_month[curr_paper].append(last_price)
+        portfolio_by_month_dates.add(curr_date)
+        index = list(portfolio_by_month_dates)
+        index.sort()
+    return portfolio_by_month, index
 
 
 @login_required(login_url="login")
 def main(request):
     """ plotting reports "portfolio vs time" and "portfolio by months" """
 
-    data = DataCache.objects.values('paper__name', 'date', 'price') \
-                            .order_by('paper' ,'date')
-
+    data = DataCache.objects.all()
     t_data = {}
     if data.exists():
         portfolio_by_month, index = call_main(data)
