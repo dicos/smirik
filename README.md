@@ -14,6 +14,9 @@ run this commands:
 + pip install -r requirements.pip
 + cd smirik
 + python manage.py syncdb
++ python manage.py runserver
++ go to http://localhost:8000/admin/auth/negotiablepaper/ and add some tickers from https://www.google.com/finance#stockscreener (for example 'IBM', 'MSF')
++ press Ctrl+C
 + python manage.py get\_data
 + python manage.py runserver
 
