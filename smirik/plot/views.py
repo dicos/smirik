@@ -1,11 +1,11 @@
 #coding: utf8
 import calendar
-from io import BytesIO
 from datetime import datetime, time
-from decimal import Decimal
 from collections import defaultdict
+from io import BytesIO
 
 import matplotlib.pyplot as plt
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from pandas import Series, DataFrame
 
@@ -73,6 +73,7 @@ def call_main(qs):
     return portfolio_by_month, portfolio_by_month_dates
 
 
+@login_required(login_url="login")
 def main(request):
     """ plotting reports "portfolio vs time" and "portfolio by months" """
 

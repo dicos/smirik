@@ -22,7 +22,7 @@ class Command(BaseCommand):
                     help='clear database and load new data'),
     )
     quantize = Decimal('0.01')  # round quantize of price
-    start_time = date(2014, 1, 1)
+    start_time = date(2005, 1, 1)
 
     def clear(self):
         DataCache.objects.all().delete()
