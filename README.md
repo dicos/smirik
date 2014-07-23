@@ -9,7 +9,7 @@ run this commands:
 + virtualenv -p python3 smirik
 + source smirik/bin/activate
 + cd smirik
-+ `git clone git@github.com:dicos/smirik.git`
++ `git clone https://github.com/dicos/smirik.git`
 + cd smirik
 + pip install -r requirements.pip
 + cd smirik
