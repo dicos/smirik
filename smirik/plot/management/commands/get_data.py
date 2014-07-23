@@ -29,7 +29,7 @@ class Command(BaseCommand):
 
     def get_price(self, value):
         """ get rounding price (convert float64 to Decimal) """
-        return Decimal(value).quantize(self.quantize, rounding=ROUND_FLOOR)
+        return Decimal(str(value)).quantize(self.quantize, rounding=ROUND_FLOOR)
 
     @nested_commit_on_success
     def handle(self, *args, **options):
