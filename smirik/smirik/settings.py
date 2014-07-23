@@ -29,7 +29,7 @@ TEMPLATE_DIRS = (
     rel('templates'),
 )
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'smirik.dicos.ru']
 
 AUTH_USER_MODEL = 'auth.Client'
 
