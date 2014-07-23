@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from common_helpers import rel
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
@@ -25,7 +26,7 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 TEMPLATE_DIRS = (
-    'templates',
+    rel('templates'),
 )
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']

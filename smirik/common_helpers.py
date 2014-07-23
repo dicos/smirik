@@ -1,5 +1,11 @@
 #coding: utf8
+import os
+
 from django.db import transaction
+
+
+def rel(*x):
+    return os.path.abspath(os.path.join(os.path.abspath(os.path.dirname(__file__)), os.pardir, *x))
 
 
 def nested_commit_on_success(func):
